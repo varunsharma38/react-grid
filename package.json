@@ -1,5 +1,5 @@
 {
-	"name": "react-webpack-boilerplate",
+	"name": "react-grid",
 	"version": "1.0.0",
 	"description": "Boilerplate code for development with React and Webpack",
 	"scripts": {
@@ -8,14 +8,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/varunsharma38/react-webpack-boilerplate.git"
+		"url": "git+https://github.com/varunsharma38/react-grid.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/varunsharma38/react-webpack-boilerplate/issues"
+		"url": "https://github.com/varunsharma38/react-grid/issues"
 	},
-	"homepage": "https://github.com/varunsharma38/react-webpack-boilerplate#readme",
+	"homepage": "https://github.com/varunsharma38/react-grid#readme",
 	"dependencies": {
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6"
