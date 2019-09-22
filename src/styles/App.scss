@@ -1,1 +1,21 @@
 @import 'bootstrap';
+@import './menu.scss';
+
+.center-align {
+    text-align: center;
+}
+
+.sub-header {
+    border: 1px solid;
+    width: 50%;
+    display: inline-block;
+}
+
+.sub-value {
+    width: 50%;
+    display: inline-block;
+}
+
+.react-grid-Canvas{
+    overflow: auto !important;
+}
