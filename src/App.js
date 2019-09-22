@@ -2,183 +2,58 @@ import React from 'react';
 import ReactDataGrid from 'react-data-grid';
 import { Editors, DraggableHeader, Menu, Data } from 'react-data-grid-addons'
 import { range } from 'lodash';
-const { DropDownEditor } = Editors;
-const { DraggableContainer } = DraggableHeader;
-const { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } = Menu;
 
+import { deleteRow, insertRow } from './utils/context-menu';
+import { getCellActions } from './utils/cell-actions';
+import { sortRows } from './utils/sort-rows';
+import { getSubRowDetails, onCellExpand } from './utils/tree-view'
+import { CombinedValueFormatter } from './components/CombinedValueFormatter'
+import { CombinedValueHeader } from './components/CombinedValueHeader'
+import { ExampleContextMenu } from './components/ExampleContextMenu'
 
 import './styles/App.scss';
 
-function CombinedValueFormatter(props) {
-    return (
-        <div className='center-align'>
-            <span className='sub-value'>{props.row.value1}</span>
-            <span className='sub-value'>{props.row.value2}</span>
-        </div>
-    )
-}
-
-function CombinedValueHeader(props) {
-    return (
-        <div className='center-align'>
-            Combined Value
-            <div>
-                <span className='sub-header'>Value 1</span>
-                <span className='sub-header'>Value 2</span>
-            </div>
-        </div>
-    )
-}
-
-function ExampleContextMenu({
-    idx,
-    id,
-    rowIdx,
-    onRowDelete,
-    onRowInsertAbove,
-    onRowInsertBelow
-}) {
-    return (
-        <ContextMenu id={id}>
-            <MenuItem data={{ rowIdx, idx }} onClick={onRowDelete}>
-                Delete Row
-      </MenuItem>
-            <SubMenu title="Insert Row">
-                <MenuItem data={{ rowIdx, idx }} onClick={onRowInsertAbove}>
-                    Above
-        </MenuItem>
-                <MenuItem data={{ rowIdx, idx }} onClick={onRowInsertBelow}>
-                    Below
-        </MenuItem>
-            </SubMenu>
-        </ContextMenu>
-    );
-}
-
-const deleteRow = rowIdx => {
-    alert('Delete Row at index ' + rowIdx)
-};
-
-const insertRow = rowIdx => {
-    alert('Insert Row at index ' + rowIdx)
-};
-
+const { DropDownEditor } = Editors;
+const { DraggableContainer } = DraggableHeader;
+const { ContextMenuTrigger } = Menu;
 
 const issueTypes = [
-    { id: "bug", value: "Bug" },
-    { id: "epic", value: "Epic" },
-    { id: "story", value: "Story" }
+    { id: 'bug', value: 'Bug' },
+    { id: 'epic', value: 'Epic' },
+    { id: 'story', value: 'Story' }
 ];
 const IssueTypeEditor = <DropDownEditor options={issueTypes} />;
 const columns = [
     {
-        key: "id", name: "ID", events: {
+        key: 'id', name: 'ID', events: {
             onDoubleClick: function (ev) {
                 alert(`Cell Double Clicked`);
             }
         }
     },
-    { key: "title", name: "Title", draggable: true, resizable: true, sortable: true },
-    { key: "complete", name: "Complete", draggable: true },
-    { key: "combinedValue", name: "Value", draggable: true, headerRenderer: CombinedValueHeader, formatter: CombinedValueFormatter },
-    { key: "issueType", name: "Task Type", draggable: true, editor: IssueTypeEditor }
+    { key: 'title', name: 'Title', draggable: true, resizable: true, sortable: true },
+    { key: 'complete', name: 'Complete', draggable: true },
+    { key: 'combinedValue', name: 'Combined Value', draggable: true, headerRenderer: CombinedValueHeader, formatter: CombinedValueFormatter },
+    { key: 'issueType', name: 'Task Type', draggable: true, editor: IssueTypeEditor }
 ];
 
 const rows = [
     {
-        id: 0, title: "Task 1", issueType: "Bug", complete: 20, value1: 10, value2: 40,
+        id: 0, title: 'Task 1', issueType: 'Bug', complete: 20, value1: 10, value2: 40,
         subTasks: [
-
-            { id: '00', title: "Task 01", issueType: "Bug", complete: 10, value1: 5, value2: 20 },
-            { id: '01', title: "Task 01", issueType: "Bug", complete: 15, value1: 10, value2: 30 }
+            { id: '00', title: 'Task 01', issueType: 'Bug', complete: 10, value1: 5, value2: 20 },
+            { id: '01', title: 'Task 01', issueType: 'Bug', complete: 15, value1: 10, value2: 30 }
         ]
 
     },
-    { id: 1, title: "Task 2", issueType: "Story", complete: 40, value1: 20, value2: 80 },
-    { id: 2, title: "Task 3", issueType: "Epic", complete: 60, value1: 30, value2: 120 }
+    { id: 1, title: 'Task 2', issueType: 'Story', complete: 40, value1: 20, value2: 80 },
+    { id: 2, title: 'Task 3', issueType: 'Epic', complete: 60, value1: 30, value2: 120 }
 ];
-
-const idActions = [
-    {
-        icon: "fa fa-align-justify",
-        actions: [
-            {
-                text: "Option 1",
-                callback: () => {
-                    alert("Option 1 clicked");
-                }
-            },
-            {
-                text: "Option 2",
-                callback: () => {
-                    alert("Option 2 clicked");
-                }
-            }
-        ]
-    }
-];
-
-function getCellActions(column, row) {
-    const cellActions = {
-        id: idActions
-    };
-    return cellActions[column.key];
-}
-
-const sortRows = (initialRows, sortColumn, sortDirection) => {
-    const comparer = (a, b) => {
-        if (sortDirection === "ASC") {
-            return a[sortColumn] > b[sortColumn] ? 1 : -1;
-        } else if (sortDirection === "DESC") {
-            return a[sortColumn] < b[sortColumn] ? 1 : -1;
-        }
-    };
-    return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
-};
 
 const defaultParsePaste = str => (
     str.split(/\r\n|\n|\r/)
         .map(row => row.split('\t'))
 );
-
-const getSubRowDetails = expandedRows => rowItem => {
-    const isExpanded = expandedRows[rowItem.id]
-        ? expandedRows[rowItem.id]
-        : false;
-    return {
-        group: rowItem.subTasks && rowItem.subTasks.length > 0,
-        expanded: isExpanded,
-        children: rowItem.subTasks,
-        field: "id",
-        treeDepth: rowItem.treeDepth || 0,
-        siblingIndex: rowItem.siblingIndex,
-        numberSiblings: rowItem.numberSiblings
-    };
-};
-
-function updateSubRowDetails(subRows, parentTreeDepth) {
-    const treeDepth = parentTreeDepth || 0;
-    subRows.forEach((sr, i) => {
-        sr.treeDepth = treeDepth + 1;
-        sr.siblingIndex = i;
-        sr.numberSiblings = subRows.length;
-    });
-}
-
-const onCellExpand = args => ({ rows, expandedRows }) => {
-    const rowKey = args.rowData.id;
-    const rowIndex = rows.indexOf(args.rowData);
-    const subRows = args.expandArgs.children;
-    if (expandedRows && !expandedRows[rowKey]) {
-        expandedRows[rowKey] = true;
-        updateSubRowDetails(subRows, args.rowData.treeDepth);
-        rows.splice(rowIndex + 1, 0, ...subRows);
-    } else if (expandedRows[rowKey]) {
-        expandedRows[rowKey] = false;
-        rows.splice(rowIndex + 1, subRows.length);
-    }
-    return { expandedRows, rows };
-};
 
 export default class App extends React.Component {
 
@@ -267,7 +142,6 @@ export default class App extends React.Component {
         e.clipboardData.setData('text/plain', text);
     }
 
-
     handlePaste(e) {
         console.debug('handlePaste Called');
         e.preventDefault();
@@ -326,7 +200,7 @@ export default class App extends React.Component {
         const visibleRows = Data.Selectors.getRows(this.state);
         return (
             <div>
-                <h3>React Webpack Test App</h3>
+                <h3 className='my-5 center-align'>React Grid</h3>
                 <DraggableContainer onHeaderDrop={this.onHeaderDrop}>
                     <ReactDataGrid
                         columns={this.state.columns}
