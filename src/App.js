@@ -1,54 +1,20 @@
 import React from 'react';
 import ReactDataGrid from 'react-data-grid';
-import { Editors, DraggableHeader, Menu, Data } from 'react-data-grid-addons'
+import { DraggableHeader, Menu, Data } from 'react-data-grid-addons'
 import { range } from 'lodash';
 
+import { ExampleContextMenu } from './components/ExampleContextMenu'
+import { columns } from './data/columns'
+import { rows } from './data/rows'
 import { deleteRow, insertRow } from './utils/context-menu';
 import { getCellActions } from './utils/cell-actions';
 import { sortRows } from './utils/sort-rows';
 import { getSubRowDetails, onCellExpand } from './utils/tree-view'
-import { CombinedValueFormatter } from './components/CombinedValueFormatter'
-import { CombinedValueHeader } from './components/CombinedValueHeader'
-import { ExampleContextMenu } from './components/ExampleContextMenu'
 
 import './styles/App.scss';
 
-const { DropDownEditor } = Editors;
 const { DraggableContainer } = DraggableHeader;
 const { ContextMenuTrigger } = Menu;
-
-const issueTypes = [
-    { id: 'bug', value: 'Bug' },
-    { id: 'epic', value: 'Epic' },
-    { id: 'story', value: 'Story' }
-];
-const IssueTypeEditor = <DropDownEditor options={issueTypes} />;
-const columns = [
-    {
-        key: 'id', name: 'ID', events: {
-            onDoubleClick: function (ev) {
-                alert(`Cell Double Clicked`);
-            }
-        }
-    },
-    { key: 'title', name: 'Title', draggable: true, resizable: true, sortable: true },
-    { key: 'complete', name: 'Complete', draggable: true },
-    { key: 'combinedValue', name: 'Combined Value', draggable: true, headerRenderer: CombinedValueHeader, formatter: CombinedValueFormatter },
-    { key: 'issueType', name: 'Task Type', draggable: true, editor: IssueTypeEditor }
-];
-
-const rows = [
-    {
-        id: 0, title: 'Task 1', issueType: 'Bug', complete: 20, value1: 10, value2: 40,
-        subTasks: [
-            { id: '00', title: 'Task 01', issueType: 'Bug', complete: 10, value1: 5, value2: 20 },
-            { id: '01', title: 'Task 01', issueType: 'Bug', complete: 15, value1: 10, value2: 30 }
-        ]
-
-    },
-    { id: 1, title: 'Task 2', issueType: 'Story', complete: 40, value1: 20, value2: 80 },
-    { id: 2, title: 'Task 3', issueType: 'Epic', complete: 60, value1: 30, value2: 120 }
-];
 
 const defaultParsePaste = str => (
     str.split(/\r\n|\n|\r/)
