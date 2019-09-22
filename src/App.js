@@ -195,7 +195,6 @@ export default class App extends React.Component {
 
         this.onGridRowsUpdated = this.onGridRowsUpdated.bind(this)
         this.onHeaderDrop = this.onHeaderDrop.bind(this)
-        this.rowGetter = this.rowGetter.bind(this)
         this.setSelection = this.setSelection.bind(this)
         this.handleCopy = this.handleCopy.bind(this)
         this.handlePaste = this.handlePaste.bind(this)
@@ -204,16 +203,6 @@ export default class App extends React.Component {
 
         document.addEventListener('copy', this.handleCopy);
         document.addEventListener('paste', this.handlePaste);
-    }
-
-    rowGetter(i, visibleRows) {
-        const combinedValue = {
-            value1: this.state.rows.value1,
-            value2: this.state.rows.value2
-        }
-
-        const row = Object.assign({}, /*this.state.rows[i]*/visibleRows, { combinedValue })
-        return row;
     }
 
     onHeaderDrop(source, target) {
@@ -305,16 +294,6 @@ export default class App extends React.Component {
 
         this.updateRows(topLeft.rowIdx, newRows);
     }
-
-    //   onGridRowsUpdated ({ fromRow, toRow, updated }) {
-    //   this.setState(state => {
-    //     const rows = state.rows.slice();
-    //     for (let i = fromRow; i <= toRow; i++) {
-    //       rows[i] = { ...rows[i], ...updated };
-    //     }
-    //     return { rows };
-    //   });
-    // };
 
     onGridRowsUpdated({ fromRow, toRow, updated, action }) {
         console.debug('onGridRowsUpdated!', action);
