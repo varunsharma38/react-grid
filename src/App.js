@@ -36,6 +36,7 @@ export default class App extends React.Component {
 
         this.onGridRowsUpdated = this.onGridRowsUpdated.bind(this)
         this.onHeaderDrop = this.onHeaderDrop.bind(this)
+        this.rowGetter = this.rowGetter.bind(this)
         this.setSelection = this.setSelection.bind(this)
         this.handleCopy = this.handleCopy.bind(this)
         this.handlePaste = this.handlePaste.bind(this)
@@ -44,6 +45,16 @@ export default class App extends React.Component {
 
         document.addEventListener('copy', this.handleCopy);
         document.addEventListener('paste', this.handlePaste);
+    }
+
+    rowGetter(i) {
+        const combinedValue = {
+            value1: this.state.rows.value1,
+            value2: this.state.rows.value2
+        }
+
+        const row = Object.assign({}, this.state.rows[i], { combinedValue })
+        return row;
     }
 
     onHeaderDrop(source, target) {
